@@ -62,6 +62,10 @@ body, .app {
   font-size: 0;
 }
 
+.open-search:hover {
+  cursor: pointer;
+}
+
 /* search page */
 
 .search-books-bar {
@@ -97,6 +101,10 @@ body, .app {
   background-repeat: no-repeat;
   background-size: 28px;
   font-size: 0;
+}
+
+.close-search:hover {
+  cursor: pointer;
 }
 
 .search-books-results {
