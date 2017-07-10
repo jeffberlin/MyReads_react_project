@@ -2,10 +2,10 @@ import React, { Component } from 'react'
 import * as BooksAPI from './BooksAPI'
 import { Route } from 'react-router-dom'
 import ListBooks from './ListBooks'
-import CreateBooks from './CreateBooks'
+//import AddBooks from './AddBooks'
 import './App.css'
 
-class BooksApp extends React.Component {
+class BooksApp extends Component {
   state = {
     books: []
     /**
@@ -16,28 +16,53 @@ class BooksApp extends React.Component {
      */
     //showSearchPage: true
   }
+
+  constructor(props) {
+    super(props);
+    this.searchBooks = this.searchBooks.bind(this)
+    this.updateShelf = this.updateShelf.bind(this)
+  }
+
   componentDidMount() {
     BooksAPI.getAll().then((books) => {
       this.setState({ books })
     })
   }
 
+  updateShelf=(book, shelf) => {
+    this.setState({ shelf })
+    if (shelf) {
+      BooksAPI.update(book, shelf).then(books => this.setState({books})).catch(function(e){console.log('error', e)})
+    }
+
+    if (book.shelf !== shelf) {
+      book.shelf = shelf
+      BooksAPI.update(book, shelf).then((res) => {
+        this.setState(state => ({ books: state.books.filter(b => b.id !== book.id).concat([ book ]) }))
+      })
+    }
+  }
+
+  searchBooks=(query) => {
+    this.setState({ query })
+    if (query.trim() !== '') {
+      BooksAPI.search(query).then(
+        res => {if (res && res.length) (this.setState({ books: res }))})
+    }
+  }
+
+  addBooks(book) {
+    BooksAPI.search(book).then(book => {
+      this.setState(state => ({
+        books: state.books.concat([ book ])
+      }))
+    })
+  }
+
   render() {
     return (
       <div className="app">
-        {this.state.showSearchPage ? (
-          <div className="search-books">
-            <div className="search-books-bar">
-              <a className="close-search" onClick={() => this.setState({ showSearchPage: false })}>Close</a>
-              <div className="search-books-input-wrapper">
-                <input type="text" placeholder="Search by title or author"/>
-              </div>
-            </div>
-            <div className="search-books-results">
-              <ol className="books-grid"></ol>
-            </div>
-          </div>
-        ) : (
+        
           <div className="list-books">
             <div className="list-books-title">
               <h1>MyReads</h1>
@@ -194,10 +219,9 @@ class BooksApp extends React.Component {
               </div>
             </div>
             <div className="open-search">
-              <a onClick={() => this.setState({ showSearchPage: true })}>Add a book</a>
+                <a onClick={() => this.setState({ showSearchPage: true })}>Add a book</a>
             </div>
           </div>
-        )}
       </div>
     )
   }

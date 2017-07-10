@@ -13,7 +13,7 @@ class ListBooks extends Component {
 		query: ''
 	}
 
-	updateQuery = (query) => {
+	updateQuery = (query, maxResults) => {
 		this.setState({ query: query.trim() })
 	}
 
@@ -28,19 +28,34 @@ class ListBooks extends Component {
 		let showingBooks
 		if (query) {
 			const match = new RegExp(escapeRegExp(query), 'i')
-			showingBooks = this.props.filter((book) => match.test(book.title))
+			showingBooks = this.props.filter((book) => match.test(book.title, book.authors))
 		} else {
 			showingBooks = this.props.books
 		}
 
-		showingBooks.sort(sortBy('title'))
+		showingBooks.sort(sortBy('title', 'authors'))
 
 		return (
-			<div className='list-books'>
-				<div className='list-books-top'>
-					<input className='search-books' type='text' value={query} onChange={(event) => this.updateQuery(event.target.value)} />
+			// backgroundImage: `url(${book.imageLinks.thumbnail})`
+
+				<div className="search-books">
+					<div className="search-books-bar">
+					  <a className="close-search" onClick={() => this.setState({ showSearchPage: false })}>Close</a>
+					  <div className="search-books-input-wrapper">
+					    <input 
+					    	type="text" 
+					    	value={query}
+					    	onChange={(event) => this.updateQuery(event.target.value)}
+					    	placeholder="Search by title or author"
+					    />
+					  </div>
+					</div>
+					<div className="search-books-results">
+					  <ol className="books-grid"></ol>
+					</div>
 				</div>
-			</div>
-			)
+		)
 	}
 }
+
+export default ListBooks
