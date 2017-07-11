@@ -50,11 +50,6 @@ class BookSearch extends Component {
 					  </div>
 					</div>
 				</div>
-				{showingBooks.length !== books.length && (
-					<div>
-						<span>Now Showing {showingBooks.length} of {showingBooks.length} total</span>
-					</div>
-				)}
 
 				<div className="search-books-results">
 					<ol className="books-grid">
@@ -62,7 +57,7 @@ class BookSearch extends Component {
 							<li key={book.id}>
 							<div className="book">
 								<div className="book-top">
-									<div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageURL})` }}>
+									<div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.thumbnail})` }}>
 									</div>
 									<div className="book-shelf-changer">
 										<select selected value={this.state.shelf} onChange={event => this.onUpdateBookStatus(book, event.target.value)}>

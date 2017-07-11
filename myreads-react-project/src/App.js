@@ -20,7 +20,7 @@ class BooksApp extends Component {
 
   componentDidMount() {
     BooksAPI.getAll().then((books) => {
-      this.setState({ books })
+      this.setState({ books: books })
     })
   }
 
@@ -33,24 +33,24 @@ class BooksApp extends Component {
 
     if (book.shelf !== shelf) {
       book.shelf = shelf
-      BooksAPI.update(book, shelf).then((res) => { this.setState(state => ({ books: state.books.filter(b => b.id !== book.id).concat([ book ])
-      }))})
-    }
+      BooksAPI.update(book, shelf).then((res) => { this.setState(state => ({ books: state.books.filter(b => b.id !== book.id).concat([ book ]) }))}
+      )}
     }
   }
 
   searchBooks = (query) => {
-    this.setState({ query: query })
-    if (query.trim() !== '') {
-      BooksAPI.search(query).then(
-        res => { if (res && res.length) { this.setState({ books: res })
-      }
+    if (query !== '') {
+      BooksAPI.search(query, 10).then(result => (
+        result.map(book => this.setState(prevState => {
+          booksArray : prevState.booksArray.push({ title : book.title, authors : book.authors, thumbnail : book.imageLinks.thumbnail, shelf : book.shelf, id : book.id})
+        }))
+      ))
+    } else {
+      this.setState({
+        booksArray : []
+      })
     }
-  ).catch(function(e) {
-    console.log('error',e)
-  })
-}
-}
+  }
     
   render() {
 
@@ -73,7 +73,7 @@ class BooksApp extends Component {
             onSearchBooks={( query ) => {
               this.searchBooks(query)
             }}
-            onUpdateBooksStatus = {( book, shelf ) => { this.updateBookStatus(book,shelf)}} />
+            onUpdateBookStatus = {( book, shelf ) => { this.updateBookStatus(book,shelf)}} />
         )} />
       </div>
             
