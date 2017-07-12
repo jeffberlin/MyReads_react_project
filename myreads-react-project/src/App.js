@@ -38,9 +38,9 @@ class BooksApp extends Component {
     }
   }
 
-  searchBooks = (query) => {
+  // searchBooks = (query) => {
     
-  }
+  // }
     
   render() {
 
@@ -60,7 +60,7 @@ class BooksApp extends Component {
           <BookSearch
             books={this.state.books}
             shelf={this.state.books}
-            onSearchBooks={( query ) => {
+            onShowingBooks={( query ) => {
               this.searchBooks(query)
             }}
             onUpdateBookStatus={(book, shelf) => { this.updateBookStatus(book,shelf) }} />
