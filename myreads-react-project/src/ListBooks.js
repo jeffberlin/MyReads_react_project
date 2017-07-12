@@ -6,7 +6,7 @@ import escapeRegExp from 'escape-string-regexp'
 class ListBooks extends Component {
 	static propTypes = {
 		books: PropTypes.array.isRequired,
-		onUpdateShelves: PropTypes.func.isRequired,
+		//onUpdateShelves: PropTypes.func.isRequired,
 		//shelf: PropTypes.string.isRequired
 	}
 

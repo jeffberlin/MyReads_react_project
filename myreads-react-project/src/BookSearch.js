@@ -10,7 +10,7 @@ class BookSearch extends Component {
 		books: PropTypes.array.isRequired,
 		//shelf: PropTypes.string.isRequired,
 		onUpdateBookStatus: PropTypes.func.isRequired,
-		onSearchBooks: PropTypes.func.isRequired
+		//onSearchBooks: PropTypes.func.isRequired
 	}
 
 	state = {
@@ -36,9 +36,8 @@ class BookSearch extends Component {
 			const match = new RegExp(escapeRegExp(query), 'i')
 			showingBooks = this.props.books.filter((book) => match.test(book.title)||match.test(book.authors))
 		} else {
-			showingBooks = books
+			showingBooks = books.map((book) => (false))
 		}
-		showingBooks.sort(sortBy('title'))
 
 		return (
 
@@ -65,7 +64,17 @@ class BookSearch extends Component {
 							<div className="book-top">
 								<div className="book-cover" style={{ width: 128, height: 188, backgroundImage: `url(${book.imageLinks.thumbnail})`
 								}}/>
+								<div className="book-shelf-changer">
+									<select selected value={this.state.shelf} onChange={(event) => onUpdateBookStatus(book, event.target.value)}>
+									<option value="none">Move to...</option>
+									<option value="currentlyReading">Currently Reading</option>
+									<option value="wantToRead">Want to Read</option>
+									<option value="read">Read</option>
+									</select>
+								</div>
 							</div>
+							<div className="book-title">{book.title}</div>
+							<div className="book-authors">{book.authors}</div>
 						</div>
 						</li>
 					))}

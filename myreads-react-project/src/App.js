@@ -39,22 +39,12 @@ class BooksApp extends Component {
   }
 
   searchBooks = (query) => {
-    if (query !== '') {
-      BooksAPI.search(query, 10).then(result => (
-        result.map(book => this.setState(prevState => {
-          booksArray : prevState.booksArray.push({ title : book.title, authors : book.authors, thumbnail : book.imageLinks.thumbnail, shelf : book.shelf, id : book.id})
-        }))
-      ))
-    } else {
-      this.setState({
-        booksArray : []
-      })
-    }
+    
   }
     
   render() {
 
-    const { books, shelf } = this.props
+    //const { books, shelf } = this.props
 
     return (
       <div className="app">
@@ -63,7 +53,7 @@ class BooksApp extends Component {
         <ListBooks
           books={this.state.books}
           shelf={this.state.shelf}
-          onUpdateBookStatus={(book, shelf) => { this.updateBookStatus(book, shelf)}} />
+          onUpdateBookStatus={(book, shelf) => { this.updateBookStatus(book, shelf) }} />
         )}/>
 
         <Route path="/search" render={({ history }) => (
@@ -73,7 +63,7 @@ class BooksApp extends Component {
             onSearchBooks={( query ) => {
               this.searchBooks(query)
             }}
-            onUpdateBookStatus={(book, shelf) => { this.updateBookStatus(book,shelf)}} />
+            onUpdateBookStatus={(book, shelf) => { this.updateBookStatus(book,shelf) }} />
         )} />
       </div>
             
