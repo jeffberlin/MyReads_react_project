@@ -38,13 +38,13 @@ class BooksApp extends Component {
     }
   }
 
-  // searchBooks = (query) => {
+  searchBooks = (query) => {
     
-  // }
+  }
     
   render() {
 
-    //const { books, shelf } = this.props
+    const { books, shelf } = this.props
 
     return (
       <div className="app">
@@ -60,7 +60,7 @@ class BooksApp extends Component {
           <BookSearch
             books={this.state.books}
             shelf={this.state.books}
-            onShowingBooks={( query ) => {
+            onSearchBooks={( query ) => {
               this.searchBooks(query)
             }}
             onUpdateBookStatus={(book, shelf) => { this.updateBookStatus(book,shelf) }} />

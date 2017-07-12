@@ -32,11 +32,12 @@ class BookSearch extends Component {
 		const { query } = this.state
 
 		let showingBooks
+
 		if (query) {
 			const match = new RegExp(escapeRegExp(query), 'i')
 			showingBooks = this.props.books.filter((book) => match.test(book.title)||match.test(book.authors))
 		} else {
-			showingBooks = books.map((book) => (false))
+			showingBooks = books.map((book) => (book = false))
 		}
 
 		return (
@@ -74,7 +75,7 @@ class BookSearch extends Component {
 								</div>
 							</div>
 							<div className="book-title">{book.title}</div>
-							<div className="book-authors">{book.authors}</div>
+							<div className="book-authors">{book.authors.join(' / ')}</div>
 						</div>
 						</li>
 					))}
