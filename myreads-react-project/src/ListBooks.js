@@ -8,7 +8,9 @@ class ListBooks extends Component {
 
 	static propTypes = {
 		books: PropTypes.array.isRequired,
-		onUpdateBook: PropTypes.func.isRequired,
+		//onUpdateBookStatus: PropTypes.func.isRequired,
+		//onSearchBook: PropTypes.func.isRequired,
+		//onChangeShelf: PropTypes.func.isRequired
 	}
 
 	state = {
@@ -16,14 +18,17 @@ class ListBooks extends Component {
 	}
 
 	render() {
-		const { books, shelf, onUpdateBook } = this.props
+		const { books, shelf, updateBookStatus, searchBook, changeShelf } = this.props
+
+		//bookShelves = this.state.books.filter(book => book.shelf === "wantToRead")
 
 		let bookShelves
 		if (shelf) {
-			//const match = new RegExp(escapeRegExp(shelf), 'i')
-
-			bookShelves = this.state.books.filter(book => book.shelf === "wantToRead")
-			bookShelves = this.state.books.filter(book => book.shelf === "read")
+			const match = new RegExp(escapeRegExp(shelf), 'i')
+			if (shelf === "wantToRead") {
+				bookShelves = this.state.books.filter(book => book.shelf === "wantToRead")
+			} else if {
+				bookShelves = this.state.books.filter(book => book.shelf === "read")
 			bookShelves = this.state.books.filter(book => book.shelf === "currentlyReading")
 		} else {
 			bookShelves = books
@@ -47,7 +52,7 @@ class ListBooks extends Component {
 					                   				<div className="book-cover" style={{ width: 128, height: 188, backgroundImage: `url(${book.imageLinks.thumbnail})` }}>
 					                   				</div>
 						                   			<div className="book-shelf-changer">
-						                   				<select value={this.state.shelf} selected onChange={event => this.onUpdateBook(book, event.target.value)}>
+						                   				<select value={this.state.shelf} selected onChange={changeShelf}>
 							                   				<option value="none" disabled>Move to...</option>
 							                   				<option value="currentlyReading">Currently Reading</option>
 							                   				<option value="wantToRead">Want to Read</option>
@@ -75,7 +80,7 @@ class ListBooks extends Component {
 					                   				<div className="book-cover" style={{ width: 128, height: 188, backgroundImage: `url(${book.imageLinks.thumbnail})` }}>
 					                   				</div>
 						                   			<div className="book-shelf-changer">
-						                   				<select value={this.state.shelf} selected onChange={event => this.onUpdateBook(book, event.target.value)}>
+						                   				<select value={this.state.shelf} selected onChange={changeShelf}>
 							                   				<option value="none" disabled>Move to...</option>
 							                   				<option value="currentlyReading">Currently Reading</option>
 							                   				<option value="wantToRead">Want to Read</option>
@@ -103,7 +108,7 @@ class ListBooks extends Component {
 					                   				<div className="book-cover" style={{ width: 128, height: 188, backgroundImage: `url(${book.imageLinks.thumbnail})` }}>
 					                   				</div>
 						                   			<div className="book-shelf-changer">
-						                   				<select value={this.state.shelf} selected onChange={event => this.onUpdateBook(book, event.target.value)}>
+						                   				<select value={this.state.shelf} selected onChange={changeShelf}>
 							                   				<option value="none" disabled>Move to...</option>
 							                   				<option value="currentlyReading">Currently Reading</option>
 							                   				<option value="wantToRead">Want to Read</option>

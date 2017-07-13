@@ -31,17 +31,6 @@ class BooksApp extends Component {
       )}
     }
   }
-
-  searchBook = (query) => {
-    if (query.trim() !== '') {
-      BooksAPI.search(query).then(res => {
-        if (res && res.length) {this.setState({books: res, query: query})
-      } else {
-        this.setState({query: query})
-      }
-      })
-    }
-  }
   
   changeShelf = (book, newShelf) => {
     const bookId = book.id;
@@ -70,8 +59,8 @@ class BooksApp extends Component {
           <ListBooks
             books={this.state.books}
             shelf={this.state.shelf}
-            onUpdateBook={(book, shelf) => {
-              this.updateBook(book, shelf)
+            onUpdateBookStatus={(book, shelf) => {
+              this.updateBookStatus(book, shelf)
             }}
           />
         )}/>
@@ -79,11 +68,11 @@ class BooksApp extends Component {
         <Route path="/search" render={({ history }) => (
           <BookSearch
             books={this.state.books}
-            shelf={this.state.books}
+            shelf={this.state.shelf}
             onSearchBook={(query) => {
               this.searchBook(query)
             }}
-            onUpdateBook={(book, shelf) => {this.updateBook(book, shelf)}}
+            updateBookStatus={(book, shelf) => {this.updateBook(book, shelf)}}
           />
         )}/>
       </div>

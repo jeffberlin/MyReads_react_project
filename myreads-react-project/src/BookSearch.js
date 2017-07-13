@@ -8,8 +8,9 @@ class BookSearch extends Component {
 
 	static propTypes = {
 		books: PropTypes.array.isRequired,
-		onUpdateBook: PropTypes.func.isRequired,
-		onSearchBook: PropTypes.func.isRequired,
+		//onUpdateBookStatus: PropTypes.func.isRequired,
+		//onSearchBook: PropTypes.func.isRequired,
+		//onChangeShelf: PropTypes.func.isRequired
 		//shelf: PropTypes.string.isRequired
 	}
 
@@ -21,9 +22,20 @@ class BookSearch extends Component {
 		this.setState({ query })
 	}
 
+	searchBook = (query) => {
+	    if (query.trim() !== '') {
+	      BooksAPI.search(query).then(res => {
+	        if (res && res.length) {this.setState({books: res, query: query})
+	      } else {
+	        this.setState({query: query})
+	      }
+	      })
+	    }
+	}
+
 	render() {
 
-		const { books, shelf, onSearchBook, onUpdateBook } = this.props
+		const { books, shelf, searchBook, updateBook, changeShelf } = this.props
 		const { query } = this.state
 
 		let showingBooks 
@@ -61,7 +73,7 @@ class BookSearch extends Component {
 								}}/>
 								<div className="book-shelf-changer">
 									<select selected value={this.state.shelf}
-										onChange={event => this.onUpdateBook(book, event.target.value)}>
+										onChange={changeShelf}>
 									<option value="none">Move to...</option>
 									<option value="currentlyReading">Currently Reading</option>
 									<option value="wantToRead">Want to Read</option>
