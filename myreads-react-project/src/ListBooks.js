@@ -25,10 +25,8 @@ class ListBooks extends Component {
 		let bookShelves
 		if (shelf) {
 			const match = new RegExp(escapeRegExp(shelf), 'i')
-			if (shelf === "wantToRead") {
-				bookShelves = this.state.books.filter(book => book.shelf === "wantToRead")
-			} else if {
-				bookShelves = this.state.books.filter(book => book.shelf === "read")
+			bookShelves = this.state.books.filter(book => book.shelf === "wantToRead")
+			bookShelves = this.state.books.filter(book => book.shelf === "read")
 			bookShelves = this.state.books.filter(book => book.shelf === "currentlyReading")
 		} else {
 			bookShelves = books
