@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import escapeRegExp from 'escape-string-regexp'
+import sortBy from 'sort-by'
 
 class ListBooks extends Component {
+
 	static propTypes = {
 		books: PropTypes.array.isRequired,
-		//onUpdateShelves: PropTypes.func.isRequired,
-		//shelf: PropTypes.string.isRequired
+		onUpdateBook: PropTypes.func.isRequired,
 	}
 
 	state = {
@@ -15,22 +16,18 @@ class ListBooks extends Component {
 	}
 
 	render() {
-		const { books, onUpdateShelves, shelf } = this.props
+		const { books, shelf, onUpdateBook } = this.props
 
-		let bookShelf
-
+		let bookShelves
 		if (shelf) {
-			const match = new RegExp(escapeRegExp(shelf), 'i')
+			//const match = new RegExp(escapeRegExp(shelf), 'i')
 
-			if (shelf === "wantToRead") {
-				bookShelf = books.filter(book => match.test(book.shelf))
-			} else if (shelf === "Read") {
-				bookShelf = books.filter(book => match.test(book.shelf))
-			} else if (shelf === "currentlyReading") {
-				bookShelf = books.filter(book => match.test(book.shelf))}
-			} else {
-				bookShelf = books
-			}
+			bookShelves = this.state.books.filter(book => book.shelf === "wantToRead")
+			bookShelves = this.state.books.filter(book => book.shelf === "read")
+			bookShelves = this.state.books.filter(book => book.shelf === "currentlyReading")
+		} else {
+			bookShelves = books
+		}
 
 		return (
 			<div className="list-books">
@@ -43,14 +40,14 @@ class ListBooks extends Component {
 		                  	<h2 className="bookshelf-title">Currently Reading</h2>
 		                  	<div className="bookshelf-books">
 				                <ol className="books-grid">
-				                   	{bookShelf.map((book) => (
+				                {bookShelves.map((book) => (
 				                   		<li key={book.id}>
 					                   		<div className="book">
 					                   			<div className="book-top">
 					                   				<div className="book-cover" style={{ width: 128, height: 188, backgroundImage: `url(${book.imageLinks.thumbnail})` }}>
 					                   				</div>
 						                   			<div className="book-shelf-changer">
-						                   				<select value={this.state.shelf} selected onChange={(event) => this.onUpdateShelves(book, event.target.value)}>
+						                   				<select value={this.state.shelf} selected onChange={event => this.onUpdateBook(book, event.target.value)}>
 							                   				<option value="none" disabled>Move to...</option>
 							                   				<option value="currentlyReading">Currently Reading</option>
 							                   				<option value="wantToRead">Want to Read</option>
@@ -60,7 +57,7 @@ class ListBooks extends Component {
 						                   			</div>
 						                   		</div>
 						                   		<div className="book-title">{book.title}</div>
-						                   		<div className="book-authors">{book.authors.join(' / ')}</div>
+						                   		<div className="book-authors">{book.authors.join(' & ')}</div>
 						                   	</div>
 				                   		</li>
 				                   	))}
@@ -70,16 +67,15 @@ class ListBooks extends Component {
 			            <div className="bookshelf">
 			            	<h2 className="bookshelf-title">Want to Read</h2>
 			            	<div className="bookshelf-books">
-
 				            	<ol className="books-grid">
-				                   	{bookShelf.map((book) => (
+				            	{bookShelves.map(book => (
 				                   		<li key={book.id}>
 					                   		<div className="book">
 					                   			<div className="book-top">
 					                   				<div className="book-cover" style={{ width: 128, height: 188, backgroundImage: `url(${book.imageLinks.thumbnail})` }}>
 					                   				</div>
 						                   			<div className="book-shelf-changer">
-						                   				<select value={this.state.shelf} selected onChange={(event) => this.onUpdateShelves(book, event.target.value)}>
+						                   				<select value={this.state.shelf} selected onChange={event => this.onUpdateBook(book, event.target.value)}>
 							                   				<option value="none" disabled>Move to...</option>
 							                   				<option value="currentlyReading">Currently Reading</option>
 							                   				<option value="wantToRead">Want to Read</option>
@@ -89,7 +85,7 @@ class ListBooks extends Component {
 						                   			</div>
 						                   		</div>
 						                   		<div className="book-title">{book.title}</div>
-						                   		<div className="book-authors">{book.authors.join(' / ')}</div>
+						                   		<div className="book-authors">{book.authors.join(' & ')}</div>
 						                   	</div>
 				                   		</li>
 				                   	))}
@@ -99,16 +95,15 @@ class ListBooks extends Component {
 				        <div className="bookshelf">
 			            	<h2 className="bookshelf-title">Read</h2>
 			            	<div className="bookshelf-books">
-
 				            	<ol className="books-grid">
-				                   	{bookShelf.map((book) => (
+				            	{bookShelves.map(book => (
 				                   		<li key={book.id}>
 					                   		<div className="book">
 					                   			<div className="book-top">
 					                   				<div className="book-cover" style={{ width: 128, height: 188, backgroundImage: `url(${book.imageLinks.thumbnail})` }}>
 					                   				</div>
 						                   			<div className="book-shelf-changer">
-						                   				<select value={this.state.shelf} selected onChange={(event) => this.onUpdateShelves(book, event.target.value)}>
+						                   				<select value={this.state.shelf} selected onChange={event => this.onUpdateBook(book, event.target.value)}>
 							                   				<option value="none" disabled>Move to...</option>
 							                   				<option value="currentlyReading">Currently Reading</option>
 							                   				<option value="wantToRead">Want to Read</option>
@@ -118,7 +113,7 @@ class ListBooks extends Component {
 						                   			</div>
 						                   		</div>
 						                   		<div className="book-title">{book.title}</div>
-						                   		<div className="book-authors">{book.authors.join(' / ')}</div>
+						                   		<div className="book-authors">{book.authors.join(' & ')}</div>
 						                   	</div>
 				                   		</li>
 				                   	))}

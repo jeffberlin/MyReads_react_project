@@ -8,9 +8,9 @@ class BookSearch extends Component {
 
 	static propTypes = {
 		books: PropTypes.array.isRequired,
-		//shelf: PropTypes.string.isRequired,
-		onUpdateBookStatus: PropTypes.func.isRequired,
-		//onSearchBooks: PropTypes.func.isRequired
+		onUpdateBook: PropTypes.func.isRequired,
+		onSearchBook: PropTypes.func.isRequired,
+		//shelf: PropTypes.string.isRequired
 	}
 
 	state = {
@@ -19,25 +19,19 @@ class BookSearch extends Component {
 
 	updateQuery = (query) => {
 		this.setState({ query })
-		this.props.onSearchBooks(query)
-	}
-
-	clearQuery = () => {
-		this.setState({ query: '' })
 	}
 
 	render() {
 
-		const { books, onUpdateBookStatus, shelf } = this.props
+		const { books, shelf, onSearchBook, onUpdateBook } = this.props
 		const { query } = this.state
 
-		let showingBooks
-
+		let showingBooks 
 		if (query) {
 			const match = new RegExp(escapeRegExp(query), 'i')
 			showingBooks = this.props.books.filter((book) => match.test(book.title)||match.test(book.authors))
 		} else {
-			showingBooks = books.map((book) => (book = false))
+			showingBooks = books
 		}
 
 		return (
@@ -66,7 +60,8 @@ class BookSearch extends Component {
 								<div className="book-cover" style={{ width: 128, height: 188, backgroundImage: `url(${book.imageLinks.thumbnail})`
 								}}/>
 								<div className="book-shelf-changer">
-									<select selected value={this.state.shelf} onChange={(event) => onUpdateBookStatus(book, event.target.value)}>
+									<select selected value={this.state.shelf}
+										onChange={event => this.onUpdateBook(book, event.target.value)}>
 									<option value="none">Move to...</option>
 									<option value="currentlyReading">Currently Reading</option>
 									<option value="wantToRead">Want to Read</option>
@@ -75,7 +70,7 @@ class BookSearch extends Component {
 								</div>
 							</div>
 							<div className="book-title">{book.title}</div>
-							<div className="book-authors">{book.authors.join(' / ')}</div>
+							<div className="book-authors">{book.authors.join(' & ')}</div>
 						</div>
 						</li>
 					))}

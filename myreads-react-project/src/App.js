@@ -6,26 +6,20 @@ import BookSearch from './BookSearch'
 import './App.css'
 
 class BooksApp extends Component {
+
   state = {
-    books: [],
-    Shelf: ''
-    /**
-     * TODO: Instead of using this state variable to keep track of which page
-     * we're on, use the URL in the browser's address bar. This will ensure that
-     * users can use the browser's back and forward buttons to navigate between
-     * pages, as well as provide a good URL they can bookmark and share.
-     */
+    books: []
+
     //showSearchPage: true
   }
 
   componentDidMount() {
     BooksAPI.getAll().then((books) => {
-      this.setState({ books: books })
+      this.setState({ books })
     })
   }
 
   updateBookStatus = (book, shelf) => {
-    this.setState({ shelf: shelf })
     if (shelf) {
       BooksAPI.update(book, shelf).then(books => this.setState({ books: books })).catch(function(e){
         console.log('error',e)
@@ -38,33 +32,60 @@ class BooksApp extends Component {
     }
   }
 
-  searchBooks = (query) => {
-    
+  searchBook = (query) => {
+    if (query.trim() !== '') {
+      BooksAPI.search(query).then(res => {
+        if (res && res.length) {this.setState({books: res, query: query})
+      } else {
+        this.setState({query: query})
+      }
+      })
+    }
+  }
+  
+  changeShelf = (book, newShelf) => {
+    const bookId = book.id;
+    BooksAPI.update(book, newShelf).then(() => { this.setState(oldState => {
+      return {
+        books: oldState.books.map(book => {
+          if (book.id === bookId) {
+            book.shelf = newShelf;
+          }
+          return book;
+        })
+      };
+    })})
   }
     
   render() {
 
     const { books, shelf } = this.props
 
+    //const bookShevles = ['none', 'currentlyReading', 'read', 'wantToRead']
+
     return (
       <div className="app">
 
         <Route exact path="/" render={() => (
-        <ListBooks
-          books={this.state.books}
-          shelf={this.state.shelf}
-          onUpdateBookStatus={(book, shelf) => { this.updateBookStatus(book, shelf) }} />
+          <ListBooks
+            books={this.state.books}
+            shelf={this.state.shelf}
+            onUpdateBook={(book, shelf) => {
+              this.updateBook(book, shelf)
+            }}
+          />
         )}/>
 
         <Route path="/search" render={({ history }) => (
           <BookSearch
             books={this.state.books}
             shelf={this.state.books}
-            onSearchBooks={( query ) => {
-              this.searchBooks(query)
+            onSearchBook={(query) => {
+              this.searchBook(query)
             }}
-            onUpdateBookStatus={(book, shelf) => { this.updateBookStatus(book,shelf) }} />
-        )} />
+            onUpdateBook={(book, shelf) => {this.updateBook(book, shelf)}}
+          />
+        )}/>
       </div>
             
     )
