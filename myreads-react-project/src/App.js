@@ -4,6 +4,7 @@ import { Route } from 'react-router-dom'
 import ListBooks from './ListBooks'
 import BookSearch from './BookSearch'
 import './App.css'
+import sortBy from 'sort-by'
 
 class BooksApp extends Component {
 
@@ -14,69 +15,63 @@ class BooksApp extends Component {
   }
 
   componentDidMount() {
-    BooksAPI.getAll().then((books) => {
+    BooksAPI.getAll().then(books => {
       this.setState({ books })
     })
   }
 
-  updateBookStatus = (book, shelf) => {
-    if (shelf) {
-      BooksAPI.update(book, shelf).then(books => this.setState({ books: books })).catch(function(e){
-        console.log('error',e)
-      });
-
-    if (book.shelf !== shelf) {
-      book.shelf = shelf
-      BooksAPI.update(book, shelf).then((res) => { this.setState(state => ({ books: state.books.filter(b => b.id !== book.id).concat([ book ]) }))}
-      )}
-    }
-  }
   
-  changeShelf = (book, newShelf) => {
-    const bookId = book.id;
-    BooksAPI.update(book, newShelf).then(() => { this.setState(oldState => {
-      return {
-        books: oldState.books.map(book => {
-          if (book.id === bookId) {
-            book.shelf = newShelf;
-          }
-          return book;
-        })
-      };
-    })})
-  }
     
   render() {
 
     const { books, shelf } = this.props
 
-    //const bookShevles = ['none', 'currentlyReading', 'read', 'wantToRead']
+    const currentlyReading = this.state.books.filter(book => book.shelf === "currentlyReading")
+    const wantToRead = this.state.books.filter(book => book.shelf === "wantToRead")
+    const read = this.state.books.filter(book => book.shelf === "read")
 
     return (
-      <div className="app">
 
-        <Route exact path="/" render={() => (
-          <ListBooks
-            books={this.state.books}
-            shelf={this.state.shelf}
-            onUpdateBookStatus={(book, shelf) => {
-              this.updateBookStatus(book, shelf)
-            }}
-          />
-        )}/>
+      <div className="list-books">
+
+        <div className="list-books-title">
+          <h1>MyReads</h1>
+        </div>
+        
+        <div className="list-books-content">
+
+          <Route exact path="/" render={() => (
+
+            <ListBooks
+              bookShelf="Currently Reading"
+              books={currentlyReading.sort(sortBy("title"))}
+              changeShelf={this.changeShelf}
+            />
+
+            <ListBooks
+              bookShelf="Want to Read"
+              books={wantToRead.sort(sortBy("title"))}
+              changeShelf={this.changeShelf}
+            />
+
+            <ListBooks
+              bookShelf="Read"
+              books={read.sort(sortBy("title"))}
+              changeShelf={this.changeShelf}
+            />
+
+          )}/>
+
+        </div>
 
         <Route path="/search" render={({ history }) => (
           <BookSearch
             books={this.state.books}
-            shelf={this.state.shelf}
-            onSearchBook={(query) => {
-              this.searchBook(query)
-            }}
-            updateBookStatus={(book, shelf) => {this.updateBook(book, shelf)}}
+            shelf={this.state.books}
           />
         )}/>
       </div>
-            
+
     )
   }
 }

@@ -8,7 +8,7 @@ import * as BooksAPI from './BooksAPI'
 class BookSearch extends Component {
 
 	static propTypes = {
-		books: PropTypes.array.isRequired,
+		books: PropTypes.array.isRequired
 		//onUpdateBookStatus: PropTypes.func.isRequired,
 		//onSearchBook: PropTypes.func.isRequired,
 		//onChangeShelf: PropTypes.func.isRequired
@@ -16,7 +16,9 @@ class BookSearch extends Component {
 	}
 
 	state = {
-		query: ''
+		query: '',
+		books: [],
+		searchResults: []
 	}
 
 	updateQuery = (query) => {
@@ -40,8 +42,22 @@ class BookSearch extends Component {
 	    }
 	}
 
+	changeShelf = (book, newShelf) => {
+	    const bookId = book.id;
+	    BooksAPI.update(book, newShelf).then(() => { this.setState(oldState => {
+	      return {
+	        books: oldState.books.map(book => {
+	          if (book.id === bookId) {
+	            book.shelf = newShelf;
+	          }
+	          return book;
+	        })
+	      };
+	    })})
+	}
+
 	componentDidMount() {
-	    BooksAPI.getAll().then((books) => {
+	    BooksAPI.getAll().then(books => {
 	      this.setState({ books })
 	    })
 	 }
@@ -51,34 +67,32 @@ class BookSearch extends Component {
 		const { books, shelf, searchBook, updateBook, changeShelf } = this.props
 		const { query } = this.state
 
-		let showingBooks 
+		let bookResults
 		if (query) {
 			const match = new RegExp(escapeRegExp(query), 'i')
-			showingBooks = this.props.books.filter((book) => match.test(book.title)||match.test(book.authors))
+			bookResults = this.props.books.filter((book) => match.test(book.title)||match.test(book.authors))
 		} else {
-			showingBooks = books
+			bookResults = books
 		}
 
 		return (
 
-			<div className="list-books">
-				<div className="search-books">
-					<div className="search-books-bar">
-					  <Link className="close-search" to="/">Close</Link>
-					  <div className="search-books-input-wrapper">
-					    <input 
-					    	type="text" 
-					    	value={query}
-					    	onChange={(event) => this.updateQuery(event.target.value.trim())}
-					    	placeholder="Search by title or author"
-					    />
-					  </div>
-					</div>
+			<div className="search-books">
+				<div className="search-books-bar">
+				  <Link className="close-search" to="/">Close</Link>
+				  <div className="search-books-input-wrapper">
+				    <input 
+				    	type="text" 
+				    	value={query}
+				    	onChange={(event) => this.updateQuery(event.target.value)}
+				    	placeholder="Search by title or author"
+				    />
+				  </div>
 				</div>
 
 				<div className="search-books-results">
 					<ol className="books-grid">
-					{showingBooks.map((book) => (
+					{books.map((book) => (
 						<li key={book.id}>
 						<div className="book">
 							<div className="book-top">
