@@ -23,16 +23,28 @@ class BookSearch extends Component {
 		this.setState({ query })
 	}
 
+	bookShelfLocation = (bookId) => {
+		return this.state.books.filter(book => book.id === bookId)
+	}
+
 	searchBook = (query) => {
 	    if (query.trim() !== '') {
 	      BooksAPI.search(query).then(res => {
-	        if (res && res.length) {this.setState({books: res, query: query})
+	        if (res && res.length) {
+	        	this.setState({books: res, query: query
+	        })
 	      } else {
 	        this.setState({query: query})
 	      }
 	      })
 	    }
 	}
+
+	componentDidMount() {
+	    BooksAPI.getAll().then((books) => {
+	      this.setState({ books })
+	    })
+	 }
 
 	render() {
 
@@ -57,7 +69,7 @@ class BookSearch extends Component {
 					    <input 
 					    	type="text" 
 					    	value={query}
-					    	onChange={(event) => this.updateQuery(event.target.value)}
+					    	onChange={(event) => this.updateQuery(event.target.value.trim())}
 					    	placeholder="Search by title or author"
 					    />
 					  </div>
