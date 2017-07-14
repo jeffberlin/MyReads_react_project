@@ -38,10 +38,9 @@ class BooksApp extends Component {
           <h1>MyReads</h1>
         </div>
         
-        <div className="list-books-content">
-
-          <Route exact path="/" render={() => (
-
+        <Route exact path="/" render={() => (
+          <div className="list-books-content">
+          
             <ListBooks
               bookShelf="Currently Reading"
               books={currentlyReading.sort(sortBy("title"))}
@@ -59,10 +58,8 @@ class BooksApp extends Component {
               books={read.sort(sortBy("title"))}
               changeShelf={this.changeShelf}
             />
-
-          )}/>
-
-        </div>
+          </div>
+        )}/>
 
         <Route path="/search" render={({ history }) => (
           <BookSearch
