@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom'
+import { Route, Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import escapeRegExp from 'escape-string-regexp'
 import sortBy from 'sort-by'
 import * as BooksAPI from './BooksAPI'
+//import Search from './Search'
 
 class ListBooks extends Component {
 
@@ -77,9 +78,7 @@ class ListBooks extends Component {
             				})}
             			</ol>
             		</div>
-            		<div className="open-search">
-			          <Link to="/search">Add a book</Link>
-			        </div>
+            		
             </div>
 				
 

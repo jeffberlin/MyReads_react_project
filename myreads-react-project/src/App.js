@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import * as BooksAPI from './BooksAPI'
-import { Route } from 'react-router-dom'
+import { Route, Link } from 'react-router-dom'
 import ListBooks from './ListBooks'
-import BookSearch from './BookSearch'
 import './App.css'
 import sortBy from 'sort-by'
+import Search from './Search'
 
 class BooksApp extends Component {
 
@@ -19,7 +19,6 @@ class BooksApp extends Component {
       this.setState({ books })
     })
   }
-
   
     
   render() {
@@ -31,42 +30,43 @@ class BooksApp extends Component {
     const read = this.state.books.filter(book => book.shelf === "read")
 
     return (
+      <div className="App">
 
-      <div className="list-books">
+        <div className="list-books">
 
-        <div className="list-books-title">
-          <h1>MyReads</h1>
-        </div>
-        
-        <Route exact path="/" render={() => (
-          <div className="list-books-content">
-          
-            <ListBooks
-              bookShelf="Currently Reading"
-              books={currentlyReading.sort(sortBy("title"))}
-              changeShelf={this.changeShelf}
-            />
-
-            <ListBooks
-              bookShelf="Want to Read"
-              books={wantToRead.sort(sortBy("title"))}
-              changeShelf={this.changeShelf}
-            />
-
-            <ListBooks
-              bookShelf="Read"
-              books={read.sort(sortBy("title"))}
-              changeShelf={this.changeShelf}
-            />
+          <div className="list-books-title">
+            <h1>MyReads</h1>
           </div>
-        )}/>
+          
+          <Route exact path="/" render={() => (
+            <div className="list-books-content">
 
-        <Route path="/search" render={({ history }) => (
-          <BookSearch
-            books={this.state.books}
-            shelf={this.state.books}
-          />
-        )}/>
+              <ListBooks
+                bookShelf="Currently Reading"
+                books={currentlyReading.sort(sortBy("title"))}
+                changeShelf={this.changeShelf}
+              />
+
+              <ListBooks
+                bookShelf="Want to Read"
+                books={wantToRead.sort(sortBy("title"))}
+                changeShelf={this.changeShelf}
+              />
+
+              <ListBooks
+                bookShelf="Read"
+                books={read.sort(sortBy("title"))}
+                changeShelf={this.changeShelf}
+              />
+
+            </div>
+          )}/>
+        </div>
+
+        <div className="open-search">
+            <Link to="/search">Add a book</Link>
+        </div>
+ 
       </div>
 
     )
