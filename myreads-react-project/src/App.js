@@ -53,6 +53,11 @@ class BooksApp extends Component {
                 bookShelf="Read"
                 books={read.sort(sortBy("title"))}
               />
+
+              <div className="open-search">
+                <Link to="/search">Add a book</Link>
+              </div>
+              
           </div>
         )}/>
 
@@ -66,9 +71,7 @@ class BooksApp extends Component {
           />
         )}/>
 
-        <div className="open-search">
-          <Link to="/search">Add a book</Link>
-        </div>
+        
 
       </div>
         
