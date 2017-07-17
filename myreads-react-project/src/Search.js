@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import escapeRegExp from 'escape-string-regexp'
-import { Link } from 'react-router-dom'
+import { Route, Link } from 'react-router-dom'
 import sortBy from 'sort-by'
 import * as BooksAPI from './BooksAPI'
 import ListBooks from './ListBooks'
+// import SearchPage from './SearchPage'
 
 class Search extends Component {
 
@@ -17,7 +18,9 @@ class Search extends Component {
 	}
 
 	state = {
-		query: '',
+		books: [],
+		query: ''
+
 	}
 
 	updateQuery = (query) => {
@@ -75,7 +78,8 @@ class Search extends Component {
 		}
 
 		return (
-			<div className="app">
+
+			<div className="searchApp">
 
 				<div className="search-books">
 					<div className="search-books-bar">
@@ -89,9 +93,8 @@ class Search extends Component {
 					    />
 					  </div>
 					</div>
-		
-	        	</div>
-
+				</div>
+				
 				<div className="search-books-results">
 					<ol className="books-grid">
 					{books.map((book) => (
@@ -118,9 +121,9 @@ class Search extends Component {
 					</ol>
 				</div>
 			</div>
+
 		)
 	}
-
 }
 
 export default Search

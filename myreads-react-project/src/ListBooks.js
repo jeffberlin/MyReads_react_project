@@ -49,7 +49,7 @@ class ListBooks extends Component {
 		// const currentlyReading = this.state.books.filter(book => book.shelf === "currentlyReading")
 		// const read = this.state.books.filter(book => book.shelf === "read")
 
-		return (
+		return (		
 
             <div className="bookshelf">
             	<h2 className="bookshelf-title">{this.props.bookShelf}</h2>
@@ -61,15 +61,15 @@ class ListBooks extends Component {
             							<div className="book-top">
             								<div className="book-cover" style={{backgroundImage: `url(${book.imageLinks.thumbnail})` }}>
             								</div>
-            									<div className="book-self-changer">
-            										<select onChange={changeShelf} value={book.shelf}>
-            											<option value="" disabled>Move to...</option>
-            											<option value="currentlyReading">Currently Reading</option>
-            											<option value="wantToRead">Want to Read</option>
-            											<option value="read">Read</option>
-            											<option value="none">None</option>
-            										</select>
-            									</div>
+        									<div className="book-self-changer">
+        										<select onChange={changeShelf} value={book.shelf}>
+        											<option value="" disabled>Move to...</option>
+        											<option value="currentlyReading">Currently Reading</option>
+        											<option value="wantToRead">Want to Read</option>
+        											<option value="read">Read</option>
+        											<option value="none">None</option>
+        										</select>
+        									</div>
             							</div>
             							<div className="book-title">{book.title}</div>
             							<div className="book-authors">{book.authors.join(' & ')}</div>
@@ -78,7 +78,6 @@ class ListBooks extends Component {
             				})}
             			</ol>
             		</div>
-            		
             </div>
 				
 
