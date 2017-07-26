@@ -4,7 +4,6 @@ import PropTypes from 'prop-types'
 import escapeRegExp from 'escape-string-regexp'
 import sortBy from 'sort-by'
 import * as BooksAPI from './BooksAPI'
-//import Search from './Search'
 
 class ListBooks extends Component {
 
@@ -33,8 +32,9 @@ class ListBooks extends Component {
 	}
 
 	render() {
-		const { books, shelf, updateBookStatus, searchBook, changeShelf } = this.props
-
+		
+		const { books } = this.props
+		
 		// let bookShelves
 		// if (shelf) {
 		// 	const match = new RegExp(escapeRegExp(shelf), 'i')
@@ -45,10 +45,6 @@ class ListBooks extends Component {
 		// 	bookShelves = books
 		// }
 
-		// const wantToRead = this.state.books.filter(book => book.shelf === "wantToRead")
-		// const currentlyReading = this.state.books.filter(book => book.shelf === "currentlyReading")
-		// const read = this.state.books.filter(book => book.shelf === "read")
-
 		return (		
 
             <div className="bookshelf">
@@ -58,22 +54,22 @@ class ListBooks extends Component {
             				{books.map((book) => {
             					<li key={book.id}>
             						<div className="book">
-            							<div className="book-top">
-            								<div className="book-cover" style={{backgroundImage: `url(${book.imageLinks.thumbnail})` }}>
-            								</div>
-        									<div className="book-self-changer">
-        										<select onChange={changeShelf} value={book.shelf}>
-        											<option value="" disabled>Move to...</option>
-        											<option value="currentlyReading">Currently Reading</option>
-        											<option value="wantToRead">Want to Read</option>
-        											<option value="read">Read</option>
-        											<option value="none">None</option>
-        										</select>
-        									</div>
-            							</div>
-            							<div className="book-title">{book.title}</div>
-            							<div className="book-authors">{book.authors.join(' & ')}</div>
-            						</div>
+									<div className="book-top">
+										<div className="book-cover" style={{backgroundImage: `url(${book.imageLinks.thumbnail})` }}>
+										</div>
+										<div className="book-self-changer">
+											<select onChange={this.changeShelf} value={this.state.shelf}>
+												<option value="" disabled>Move to...</option>
+												<option value="currentlyReading">Currently Reading</option>
+												<option value="wantToRead">Want to Read</option>
+												<option value="read">Read</option>
+												<option value="none">None</option>
+											</select>
+										</div>
+									</div>
+									<div className="book-title">{book.title}</div>
+									<div className="book-authors">{book.authors.join(' & ')}</div>
+								</div>
             					</li>
             				})}
             			</ol>

@@ -5,30 +5,24 @@ import { Route, Link } from 'react-router-dom'
 import sortBy from 'sort-by'
 import * as BooksAPI from './BooksAPI'
 import ListBooks from './ListBooks'
-// import SearchPage from './SearchPage'
 
 class Search extends Component {
 
 	static propTypes = {
 		books: PropTypes.array.isRequired
-		//onUpdateBookStatus: PropTypes.func.isRequired,
-		//onSearchBook: PropTypes.func.isRequired,
-		//onChangeShelf: PropTypes.func.isRequired
-		//shelf: PropTypes.string.isRequired
 	}
 
 	state = {
 		books: [],
 		query: ''
-
-	}
-
-	updateQuery = (query) => {
-		this.setState({ query })
 	}
 
 	bookShelfLocation = (bookId) => {
 		return this.state.books.filter(book => book.id === bookId)
+	}
+
+	updateQuery = (query) => {
+		this.setState({ query: query.trim() })
 	}
 
 	searchBook = (query) => {
@@ -48,7 +42,7 @@ class Search extends Component {
 	    const bookId = book.id;
 	    BooksAPI.update(book, newShelf).then(() => { this.setState(oldState => {
 	      return {
-	        books: oldState.books.map(book => {
+	        books: oldState.searchResults.map(book => {
 	          if (book.id === bookId) {
 	            book.shelf = newShelf;
 	          }
@@ -66,15 +60,19 @@ class Search extends Component {
 
 	render() {
 
-		const { books, shelf, searchBook, updateBook, changeShelf } = this.props
-		const { query } = this.state
+		const { books } = this.props;
+		const { query } = this.state;
 
-		let bookResults
+		const currentlyReading = this.state.books.filter(book => book.shelf === "currentlyReading")
+    	const wantToRead = this.state.books.filter(book => book.shelf === "wantToRead")
+    	const read = this.state.books.filter(book => book.shelf === "read")
+
+		let showingBooks
 		if (query) {
 			const match = new RegExp(escapeRegExp(query), 'i')
-			bookResults = this.props.books.filter((book) => match.test(book.title)||match.test(book.authors))
+			showingBooks = books.filter((book) => match.test(book.title)||match.test(book.authors))
 		} else {
-			bookResults = books
+			showingBooks = books
 		}
 
 		return (
@@ -97,29 +95,29 @@ class Search extends Component {
 				
 				<div className="search-books-results">
 					<ol className="books-grid">
-					{books.map((book) => (
-						<li key={book.id}>
-						<div className="book">
-							<div className="book-top">
-								<div className="book-cover" style={{ width: 128, height: 188, backgroundImage: `url(${book.imageLinks.thumbnail})`
-								}}/>
-								<div className="book-shelf-changer">
-									<select selected value={this.state.shelf}
-										onChange={changeShelf}>
-									<option value="none">Move to...</option>
-									<option value="currentlyReading">Currently Reading</option>
-									<option value="wantToRead">Want to Read</option>
-									<option value="read">Read</option>
-									</select>
+	    				{showingBooks.map((book) => {
+	    					<li key={book.id}>
+								<div className="book">
+									<div className="book-top">
+										<div className="book-cover" style={{backgroundImage: `url(${book.imageLinks.thumbnail})` }}>
+										</div>
+										<div className="book-self-changer">
+											<select onChange={this.changeShelf} value={this.state.shelf}>
+												<option value="" disabled>Move to...</option>
+												<option value="currentlyReading">Currently Reading</option>
+												<option value="wantToRead">Want to Read</option>
+												<option value="read">Read</option>
+												<option value="none">None</option>
+											</select>
+										</div>
+									</div>
+									<div className="book-title">{book.title}</div>
+									<div className="book-authors">{book.authors.join(' & ')}</div>
 								</div>
-							</div>
-							<div className="book-title">{book.title}</div>
-							<div className="book-authors">{book.authors.join(' & ')}</div>
-						</div>
-						</li>
-					))}
-					</ol>
-				</div>
+							</li>
+            			})}
+            		</ol>
+            	</div>
 			</div>
 
 		)
