@@ -6,6 +6,7 @@ import sortBy from 'sort-by'
 import * as BooksAPI from './BooksAPI'
 import ListBooks from './ListBooks'
 
+
 class Search extends Component {
 
 	static propTypes = {
@@ -64,16 +65,18 @@ class Search extends Component {
 		const { query } = this.state;
 
 		const currentlyReading = this.state.books.filter(book => book.shelf === "currentlyReading")
+
     	const wantToRead = this.state.books.filter(book => book.shelf === "wantToRead")
+
     	const read = this.state.books.filter(book => book.shelf === "read")
 
-		let showingBooks
-		if (query) {
-			const match = new RegExp(escapeRegExp(query), 'i')
-			showingBooks = books.filter((book) => match.test(book.title)||match.test(book.authors))
-		} else {
-			showingBooks = books
-		}
+    	let showingBooks
+    	if (query) {
+    		const match = new RegExp(escapeRegExp(query), 'i')
+    		showingBooks = books.filter((book) => match.test(book.title)||match.test(book.authors))
+    	} else {
+    		showingBooks = books
+    	}
 
 		return (
 

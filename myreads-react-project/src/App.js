@@ -22,12 +22,13 @@ class BooksApp extends Component {
 
   render() {
 
-    const { books, shelf, updateBookStatus, changeShelf } = this.props
+    const { books, shelf, updateBookStatus, changeShelf } = this.props;
+    const { query } = this.state;
 
     const currentlyReading = this.state.books.filter(book => book.shelf === "currentlyReading")
 
     const wantToRead = this.state.books.filter(book => book.shelf === "wantToRead")
-    
+
     const read = this.state.books.filter(book => book.shelf === "read")
 
     return (
