@@ -20,10 +20,26 @@ class BooksApp extends Component {
     })
   }
 
+  updateBook = (book, shelf) => {
+    this.setState((state) => ({
+      books: state.books.filter((b) => b.id !== book.id)
+    }))
+
+    BooksAPI.update(book, shelf)
+  }
+
+  // handleOnchange = (e) => {
+  //   BooksAPI.update(book, e.target.value).then(books => {
+  //     BooksAPI.getAll().then(books => {
+  //       this.setState({...this.state, ...this.formatBooks(books)});
+  //     })
+  //   });
+  // };
+
   render() {
 
     const { books, shelf, updateBookStatus, changeShelf } = this.props;
-    const { query } = this.state;
+    // const { query } = this.state;
 
     const currentlyReading = this.state.books.filter(book => book.shelf === "currentlyReading")
 
@@ -47,18 +63,21 @@ class BooksApp extends Component {
                 bookShelf="Currently Reading"
                 books={currentlyReading.sort(sortBy("title"))}
                 changeShelf={this.changeShelf}
+                books={this.state.books}
               />
 
               <ListBooks
                 bookShelf="Want to Read"
                 books={wantToRead.sort(sortBy("title"))}
                 changeShelf={this.changeShelf}
+                books={this.state.books}
               />
 
               <ListBooks
                 bookShelf="Read"
                 books={read.sort(sortBy("title"))}
                 changeShelf={this.changeShelf}
+                books={this.state.books}
               />
 
               <div className="open-search">
@@ -69,11 +88,13 @@ class BooksApp extends Component {
         )}/>
 
         <Route path="/search" render={({ history }) => (
-
           <Search
             books={this.state.books}
             updateQuery={this.showingBooks}
-            changeShelf={this.changeShelf}
+            onChangeShelf={(book) => {
+              this.changeShelf(book)
+              history.push('/')
+            }}
           />
         )}/>
 

@@ -6,6 +6,7 @@ import sortBy from 'sort-by'
 import * as BooksAPI from './BooksAPI'
 import ListBooks from './ListBooks'
 
+// Handles the search bar and search page
 
 class Search extends Component {
 
@@ -26,18 +27,22 @@ class Search extends Component {
 		this.setState({ query: query.trim() })
 	}
 
-	searchBook = (query) => {
-	    if (query.trim() !== '') {
-	      BooksAPI.search(query).then(res => {
-	        if (res && res.length) {
-	        	this.setState({books: res, query: query
-	        })
-	      } else {
-	        this.setState({query: query})
-	      }
-	      })
-	    }
+	clearQuery = () => {
+		this.setState({ query: '' })
 	}
+
+	// searchBook = (query) => {
+	//     if (query.trim() !== '') {
+	//       BooksAPI.search(query).then(res => {
+	//         if (res && res.length) {
+	//         	this.setState({books: res, query
+	//         })
+	//       } else {
+	//         this.setState({ query })
+	//       }
+	//       })
+	//     }
+	// }
 	
 	changeShelf = (book, newShelf) => {
 	    const bookId = book.id;
@@ -54,15 +59,16 @@ class Search extends Component {
 	}
 
 	componentDidMount() {
-	    BooksAPI.getAll().then(books => {
-	      this.setState({ books })
-	    })
+		BooksAPI.getAll().then((books) => {
+			this.setState({ books })
+		})
 	}
 
 	render() {
 
 		const { books } = this.props;
 		const { query } = this.state;
+		const { handleOnchange } = this.props;
 
 		const currentlyReading = this.state.books.filter(book => book.shelf === "currentlyReading")
 
@@ -77,6 +83,8 @@ class Search extends Component {
     	} else {
     		showingBooks = books
     	}
+
+    	showingBooks.sort(sortBy('title'))
 
 		return (
 
@@ -98,14 +106,14 @@ class Search extends Component {
 				
 				<div className="search-books-results">
 					<ol className="books-grid">
-	    				{showingBooks.map((book) => {
+	    				{showingBooks.map((book) => (
 	    					<li key={book.id}>
 								<div className="book">
 									<div className="book-top">
-										<div className="book-cover" style={{backgroundImage: `url(${book.imageLinks.thumbnail})` }}>
+										<div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.thumbnail})` }}>
 										</div>
 										<div className="book-self-changer">
-											<select onChange={this.changeShelf} value={this.state.shelf}>
+											<select onChange={this.changeShelf} value={book.shelf}>
 												<option value="" disabled>Move to...</option>
 												<option value="currentlyReading">Currently Reading</option>
 												<option value="wantToRead">Want to Read</option>
@@ -118,7 +126,7 @@ class Search extends Component {
 									<div className="book-authors">{book.authors.join(' & ')}</div>
 								</div>
 							</li>
-            			})}
+            			))}
             		</ol>
             	</div>
 			</div>

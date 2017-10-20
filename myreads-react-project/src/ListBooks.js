@@ -9,7 +9,7 @@ class ListBooks extends Component {
 
 	static propTypes = {
 		books: PropTypes.array.isRequired,
-		//onUpdateBookStatus: PropTypes.func.isRequired,
+		// onUpdateBookStatus: PropTypes.func.isRequired,
 		//onSearchBook: PropTypes.func.isRequired,
 		//onChangeShelf: PropTypes.func.isRequired
 	}
@@ -18,22 +18,30 @@ class ListBooks extends Component {
 		query: ''
 	}
 
-	updateBookStatus = (book, shelf) => {
-	    if (shelf) {
-	      BooksAPI.update(book, shelf).then(books => this.setState({ books: books })).catch(function(e){
-	        console.log('error',e)
-	      });
+	// updateBookStatus = (book, shelf) => {
+	//     if (shelf) {
+	//       BooksAPI.update(book, shelf).then(books => this.setState({ books: books })).catch(function(e){
+	//         console.log('error',e)
+	//       });
 
-	    if (book.shelf !== shelf) {
-	      book.shelf = shelf
-	      BooksAPI.update(book, shelf).then((res) => { this.setState(state => ({ books: state.books.filter(b => b.id !== book.id).concat([ book ]) }))}
-	      )}
-	    }
-	}
+	//     if (book.shelf !== shelf) {
+	//       book.shelf = shelf
+	//       BooksAPI.update(book, shelf).then((res) => { this.setState(state => ({ books: state.books.filter(b => b.id !== book.id).concat([ book ]) }))}
+	//       )}
+	//     }
+	// }
+
+	updateBook = (book, shelf) => {
+	    this.setState((state) => ({
+	      books: state.books.filter((b) => b.id !== book.id)
+	    }))
+
+	    BooksAPI.update(book, shelf)
+  	}
 
 	render() {
 		
-		const { books } = this.props
+		const { books } = this.props;
 		
 		// let bookShelves
 		// if (shelf) {
@@ -55,7 +63,7 @@ class ListBooks extends Component {
         					<li key={book.id}>
         						<div className="book">
 								<div className="book-top">
-									<div className="book-cover" style={{backgroundImage: `url(${book.imageLinks.thumbnail})` }}>
+									<div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.thumbnail})` }}>
 									</div>
 									<div className="book-self-changer">
 										<select onChange={this.changeShelf} value={this.state.shelf}>
